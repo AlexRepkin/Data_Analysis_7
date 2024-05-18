@@ -13,27 +13,26 @@ import psycopg2
 
 def create_db():
     """Создать базу данных."""
-    try:
-        # Подключение к серверу PostgreSQL
-        with psycopg2.connect(
-            dbname="people",
-            user="postgres",
-            password="password",
-            host="127.0.0.1",
-            port=5432,
-            options="-c client_encoding=UTF8"  # Попытка решить проблему UTF-8
+    # Подключение к серверу PostgreSQL
+    with psycopg2.connect(
+        dbname="people",
+        user="postgres",
+        password="password",
+        host="127.0.0.1",
+        port=5432,
+        options="-c client_encoding=UTF8"  # Попытка решить проблему UTF-8
         ) as conn:
-            with conn.cursor() as cursor:
-                cursor.execute(
-                    """
+        with conn.cursor() as cursor:
+             cursor.execute(
+                  """
                     CREATE TABLE IF NOT EXISTS surnames (
                         surname_id SERIAL PRIMARY KEY,
                         surname TEXT NOT NULL
                     )
                     """
-                )
-                cursor.execute(
-                    """
+                  )
+              cursor.execute(
+                   """
                     CREATE TABLE IF NOT EXISTS people (
                         human_id SERIAL PRIMARY KEY,
                         name TEXT NOT NULL,
@@ -43,10 +42,8 @@ def create_db():
                         FOREIGN KEY(surname_id) REFERENCES surnames(surname_id)
                     )
                     """
-                )
-                conn.commit()
-    except Exception as e:
-        print(f"Error creating database: {e}")
+                   )
+               conn.commit()
 
 
 def display_people(people):
@@ -70,24 +67,23 @@ def display_people(people):
 
 def new_human(name: str, surname: str, telephone: str, birthday: str) -> None:
     """Добавить данные о человеке."""
-    try:
-        with psycopg2.connect(
-            dbname="people",
-            user="postgres",
-            password="password",
-            host="127.0.0.1",
-            port=5432,
-            options="-c client_encoding=UTF8"
+    with psycopg2.connect(
+        dbname="people",
+        user="postgres",
+        password="password",
+        host="127.0.0.1",
+        port=5432,
+        options="-c client_encoding=UTF8"
         ) as conn:
-            with conn.cursor() as cursor:
-                cursor.execute(
-                    """
+        with conn.cursor() as cursor:
+             cursor.execute(
+                  """
                     SELECT surname_id FROM surnames WHERE surname = %s
                     """,
-                    (surname,)
-                )
-                row = cursor.fetchone()
-                if row is None:
+                  (surname,)
+                  )
+              row = cursor.fetchone()
+               if row is None:
                     cursor.execute(
                         """
                         INSERT INTO surnames (surname) VALUES (%s) RETURNING surname_id
@@ -106,67 +102,60 @@ def new_human(name: str, surname: str, telephone: str, birthday: str) -> None:
                     (name, surname_id, telephone, birthday)
                 )
                 conn.commit()
-    except Exception as e:
-        print(f"Error adding new human: {e}")
 
 
 def select_all() -> t.List[t.Dict[str, t.Any]]:
     """Выбрать всех людей."""
-    try:
-        with psycopg2.connect(
-            dbname="people",
-            user="postgres",
-            password="password",
-            host="127.0.0.1",
-            port=5432,
-            options="-c client_encoding=UTF8"
-        ) as conn:
-            with conn.cursor() as cursor:
-                cursor.execute(
-                    """
+    with psycopg2.connect(
+        dbname="people",
+        user="postgres",
+        password="password",
+        host="127.0.0.1",
+        port=5432,
+        options="-c client_encoding=UTF8"
+    ) as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                """
                     SELECT people.name, surnames.surname, people.telephone, people.birthday
                     FROM people
                     INNER JOIN surnames ON surnames.surname_id = people.surname_id
                     """
-                )
-                rows = cursor.fetchall()
-                return [
-                    {
-                        "name": row[0],
-                        "surname": row[1],
-                        "telephone": row[2],
-                        "birthday": row[3]
-                    }
-                    for row in rows
-                ]
-    except Exception as e:
-        print(f"Error selecting all people: {e}")
-        return []
+            )
+            rows = cursor.fetchall()
+            return [
+                {
+                    "name": row[0],
+                    "surname": row[1],
+                    "telephone": row[2],
+                    "birthday": row[3]
+                }
+                for row in rows
+            ]
 
 
 def select_by_month(month: int) -> t.List[t.Dict[str, t.Any]]:
     """Выбрать людей, родившихся в требуемом месяце."""
-    try:
-        with psycopg2.connect(
-            dbname="people",
-            user="postgres",
-            password="password",
-            host="127.0.0.1",
-            port=5432,
-            options="-c client_encoding=UTF8"
+    with psycopg2.connect(
+        dbname="people",
+        user="postgres",
+        password="password",
+        host="127.0.0.1",
+        port=5432,
+        options="-c client_encoding=UTF8"
         ) as conn:
-            with conn.cursor() as cursor:
-                cursor.execute(
-                    """
+        with conn.cursor() as cursor:
+             cursor.execute(
+                  """
                     SELECT people.name, surnames.surname, people.telephone, people.birthday
                     FROM people
                     INNER JOIN surnames ON surnames.surname_id = people.surname_id
                     WHERE EXTRACT(MONTH FROM people.birthday) = %s
                     """,
-                    (month,)
-                )
-                rows = cursor.fetchall()
-                return [
+                  (month,)
+                  )
+              rows = cursor.fetchall()
+               return [
                     {
                         "name": row[0],
                         "surname": row[1],
@@ -176,9 +165,6 @@ def select_by_month(month: int) -> t.List[t.Dict[str, t.Any]]:
                     }
                     for row in rows
                 ]
-    except Exception as e:
-        print(f"Error selecting people by month: {e}")
-        return []
 
 
 def main(command_line=None):
