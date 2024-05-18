@@ -1,0 +1,51 @@
+name: Data_Analysis
+channels:
+  - defaults
+dependencies:
+  - attrs=23.1.0=py312haa95532_0
+  - black=23.11.0=py312haa95532_0
+  - bzip2=1.0.8=h2bbff1b_5
+  - ca-certificates=2024.3.11=haa95532_0
+  - click=8.1.7=py312haa95532_0
+  - colorama=0.4.6=py312haa95532_0
+  - expat=2.5.0=hd77b12b_0
+  - flake8=7.0.0=py312haa95532_0
+  - isort=5.9.3=pyhd3eb1b0_0
+  - jsonschema=4.19.2=py312haa95532_0
+  - jsonschema-specifications=2023.7.1=py312haa95532_0
+  - krb5=1.20.1=h5b6d351_0
+  - libffi=3.4.4=hd77b12b_0
+  - libpq=12.17=h906ac69_0
+  - mccabe=0.7.0=pyhd3eb1b0_0
+  - mypy_extensions=1.0.0=py312haa95532_0
+  - openssl=3.0.13=h2bbff1b_1
+  - packaging=23.1=py312haa95532_0
+  - pathspec=0.10.3=py312haa95532_0
+  - pip=23.3.1=py312haa95532_0
+  - platformdirs=3.10.0=py312haa95532_0
+  - psycopg2=2.9.9=py312h2bbff1b_0
+  - pycodestyle=2.11.1=py312haa95532_0
+  - pyflakes=3.2.0=py312haa95532_0
+  - python=3.12.2=h1d929f7_0
+  - python-dotenv=0.21.0=py312haa95532_0
+  - referencing=0.30.2=py312haa95532_0
+  - rpds-py=0.10.6=py312h062c2fa_0
+  - setuptools=68.2.2=py312haa95532_0
+  - sqlite=3.41.2=h2bbff1b_0
+  - tk=8.6.12=h2bbff1b_0
+  - tzdata=2024a=h04d1e81_0
+  - vc=14.2=h21ff451_1
+  - vs2015_runtime=14.27.29016=h5e58377_2
+  - wheel=0.41.2=py312haa95532_0
+  - xz=5.4.6=h8cc25b3_0
+  - zlib=1.2.13=h8cc25b3_0
+  - pip:
+      - cfgv==3.4.0
+      - distlib==0.3.8
+      - filelock==3.13.4
+      - identify==2.5.36
+      - nodeenv==1.8.0
+      - pre-commit==3.7.0
+      - pyyaml==6.0.1
+      - virtualenv==20.25.3
+prefix: J:\Anaconda\envs\Data_Analysis

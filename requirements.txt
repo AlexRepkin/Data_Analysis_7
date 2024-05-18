@@ -1,0 +1,29 @@
+attrs @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/attrs_1699473735254/work
+black @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/black_1701810921814/work
+cfgv==3.4.0
+click @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/click_1699473800648/work
+colorama @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/colorama_1699472650914/work
+distlib==0.3.8
+filelock==3.13.4
+flake8 @ file:///C:/b/abs_caud66drfv/croot/flake8_1708965316778/work
+identify==2.5.36
+isort @ file:///tmp/build/80754af9/isort_1628603791788/work
+jsonschema @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/jsonschema_1701796333530/work
+jsonschema-specifications @ file:///C:/Users/dev-admin/py312/jsonschema-specifications_1706803038066/work
+mccabe @ file:///opt/conda/conda-bld/mccabe_1644221741721/work
+mypy-extensions @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/mypy_extensions_1699482634516/work
+nodeenv==1.8.0
+packaging @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/packaging_1699472459356/work
+pathspec @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/pathspec_1699472481068/work
+platformdirs @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/platformdirs_1701797392447/work
+pre-commit==3.7.0
+psycopg2 @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/psycopg2_1707437392972/work
+pycodestyle @ file:///C:/b/abs_e9pt4mahct/croot/pycodestyle_1701910643139/work
+pyflakes @ file:///C:/b/abs_b6t1aazq2e/croot/pyflakes_1708963020907/work
+python-dotenv @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/python-dotenv_1699475097728/work
+PyYAML==6.0.1
+referencing @ file:///C:/Users/dev-admin/py312/referencing_1706802962559/work
+rpds-py @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/rpds-py_1699565648947/work
+setuptools==68.2.2
+virtualenv==20.25.3
+wheel==0.41.2
