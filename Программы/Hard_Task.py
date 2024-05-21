@@ -21,18 +21,20 @@ def create_db():
         host="127.0.0.1",
         port=5432,
         options="-c client_encoding=UTF8"  # Попытка решить проблему UTF-8
-        ) as conn:
+    ) as conn:
         with conn.cursor() as cursor:
-             cursor.execute(
-                  """
+            # Создание таблицы surnames, если она не существует.
+            cursor.execute(
+                """
                     CREATE TABLE IF NOT EXISTS surnames (
                         surname_id SERIAL PRIMARY KEY,
                         surname TEXT NOT NULL
                     )
                     """
-                  )
-              cursor.execute(
-                   """
+            )
+            # Создание таблицы people, если она не существует.
+            cursor.execute(
+                """
                     CREATE TABLE IF NOT EXISTS people (
                         human_id SERIAL PRIMARY KEY,
                         name TEXT NOT NULL,
@@ -42,8 +44,8 @@ def create_db():
                         FOREIGN KEY(surname_id) REFERENCES surnames(surname_id)
                     )
                     """
-                   )
-               conn.commit()
+            )
+            conn.commit()
 
 
 def display_people(people):
@@ -67,45 +69,7 @@ def display_people(people):
 
 def new_human(name: str, surname: str, telephone: str, birthday: str) -> None:
     """Добавить данные о человеке."""
-    with psycopg2.connect(
-        dbname="people",
-        user="postgres",
-        password="password",
-        host="127.0.0.1",
-        port=5432,
-        options="-c client_encoding=UTF8"
-        ) as conn:
-        with conn.cursor() as cursor:
-             cursor.execute(
-                  """
-                    SELECT surname_id FROM surnames WHERE surname = %s
-                    """,
-                  (surname,)
-                  )
-              row = cursor.fetchone()
-               if row is None:
-                    cursor.execute(
-                        """
-                        INSERT INTO surnames (surname) VALUES (%s) RETURNING surname_id
-                        """,
-                        (surname,)
-                    )
-                    surname_id = cursor.fetchone()[0]
-                else:
-                    surname_id = row[0]
-
-                cursor.execute(
-                    """
-                    INSERT INTO people (name, surname_id, telephone, birthday)
-                    VALUES (%s, %s, %s, %s)
-                    """,
-                    (name, surname_id, telephone, birthday)
-                )
-                conn.commit()
-
-
-def select_all() -> t.List[t.Dict[str, t.Any]]:
-    """Выбрать всех людей."""
+    # Подключение к серверу PostgreSQL.
     with psycopg2.connect(
         dbname="people",
         user="postgres",
@@ -115,6 +79,49 @@ def select_all() -> t.List[t.Dict[str, t.Any]]:
         options="-c client_encoding=UTF8"
     ) as conn:
         with conn.cursor() as cursor:
+            # Проверка, существует ли фамилия в таблице surnames.
+            cursor.execute(
+                """
+                    SELECT surname_id FROM surnames WHERE surname = %s
+                    """,
+                (surname,)
+            )
+            row = cursor.fetchone()
+            if row is None:
+                # Если фамилии нет, то добавляется новая запись и получиется её ID.
+                cursor.execute(
+                    """
+                        INSERT INTO surnames (surname) VALUES (%s) RETURNING surname_id
+                        """,
+                    (surname,)
+                )
+                surname_id = cursor.fetchone()[0]
+            else:
+                surname_id = row[0]
+            # Добавление записи в таблицу people.
+            cursor.execute(
+                """
+                    INSERT INTO people (name, surname_id, telephone, birthday)
+                    VALUES (%s, %s, %s, %s)
+                    """,
+                (name, surname_id, telephone, birthday)
+            )
+            conn.commit()
+
+
+def select_all() -> t.List[t.Dict[str, t.Any]]:
+    """Выбрать всех людей."""
+    # Подключение к серверу PostgreSQL.
+    with psycopg2.connect(
+        dbname="people",
+        user="postgres",
+        password="password",
+        host="127.0.0.1",
+        port=5432,
+        options="-c client_encoding=UTF8"
+    ) as conn:
+        with conn.cursor() as cursor:
+            # Запрос на получение всех записей из таблиц people и surnames.
             cursor.execute(
                 """
                     SELECT people.name, surnames.surname, people.telephone, people.birthday
@@ -123,6 +130,8 @@ def select_all() -> t.List[t.Dict[str, t.Any]]:
                     """
             )
             rows = cursor.fetchall()
+            # Преобразование результатов в список словарей. Так, в соотношении к именам будет весь первый столбец,
+            # Фамилии будут ассоциироваться со 2 столбцом и так далее.
             return [
                 {
                     "name": row[0],
@@ -136,6 +145,7 @@ def select_all() -> t.List[t.Dict[str, t.Any]]:
 
 def select_by_month(month: int) -> t.List[t.Dict[str, t.Any]]:
     """Выбрать людей, родившихся в требуемом месяце."""
+    # Подключение к серверу PostgreSQL.
     with psycopg2.connect(
         dbname="people",
         user="postgres",
@@ -143,28 +153,31 @@ def select_by_month(month: int) -> t.List[t.Dict[str, t.Any]]:
         host="127.0.0.1",
         port=5432,
         options="-c client_encoding=UTF8"
-        ) as conn:
+    ) as conn:
         with conn.cursor() as cursor:
-             cursor.execute(
-                  """
+            # Запрос на выбор записей из таблиц people и surnames по месяцу рождения.
+            cursor.execute(
+                """
                     SELECT people.name, surnames.surname, people.telephone, people.birthday
                     FROM people
                     INNER JOIN surnames ON surnames.surname_id = people.surname_id
                     WHERE EXTRACT(MONTH FROM people.birthday) = %s
                     """,
-                  (month,)
-                  )
-              rows = cursor.fetchall()
-               return [
-                    {
-                        "name": row[0],
-                        "surname": row[1],
-                        "telephone": row[2],
-                        # Format date back to string for display
-                        "birthday": row[3].strftime('%d.%m.%Y')
-                    }
-                    for row in rows
-                ]
+                # %s - используется для параметров, которые предоставят позднее.
+                (month,)
+            )
+            rows = cursor.fetchall()
+            # Преобразование результатов в список словарей, аналогично позапрошлому комментарию.
+            return [
+                {
+                    "name": row[0],
+                    "surname": row[1],
+                    "telephone": row[2],
+                    # Преобразование даты в символьный тип для отображения.
+                    "birthday": row[3].strftime('%d.%m.%Y')
+                }
+                for row in rows
+            ]
 
 
 def main(command_line=None):

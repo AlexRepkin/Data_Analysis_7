@@ -86,7 +86,7 @@ def new_human(database_path: Path, name: str, surname: str, telephone: str, birt
     else:
         surname_id = row[0]
 
-    # Добавить информацию о новом человеке.
+    # Добавить информацию о новом человеке. ? используются для безопасности, значения параметров экранируются.
     cursor.execute(
         """
         INSERT INTO people (name, surname_id, telephone, birthday)
